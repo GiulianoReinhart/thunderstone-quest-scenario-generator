@@ -1,34 +1,68 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {MouseEvent, useEffect, useState} from 'react'
+import {Hero} from './data/heroes'
+import {Monster, MonsterGroups, monsterGroups} from './data/monsterGroups'
+import {packs} from './data/packs'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [activeMonsterGroups, setActiveMonsterGroups] = useState<MonsterGroups | null>(null)
+  const [activePacks, setActivePacks] = useState(Object.keys(packs))
+
+  const [fittingHeroes, setFittingHeroes] = useState<Hero[] | null>(null)
+
+  const [generatedMonsterGroups, setGeneratedMonsterGroups] = useState<Monster[] | null>(null)
+  useEffect(() => console.log(generatedMonsterGroups), [generatedMonsterGroups])
+  useEffect(() => {
+    setActiveMonsterGroups(monsterGroups)
+  }, [])
+
+  /* useEffect(() => {
+    setActiveMonsterGroups(() => {
+      for (const level in monsterGroups) {
+        newMonsterList += monsterGroups[level].filter((monster: Monster) => activePacks.includes(monster.pack))
+      }
+    })
+  }, [activePacks]) */
+
+  const packHandler = (e: MouseEvent<HTMLButtonElement>) => {
+    const targetPack: string = (e.target as HTMLButtonElement).value
+
+    setActivePacks(prevState => {
+      if (prevState.includes(targetPack)) {
+        return prevState.filter(pack => pack !== targetPack)
+      } else {
+        return [...prevState, targetPack].sort()
+      }
+    })
+  }
+
+  const generate = () => {
+    setGeneratedMonsterGroups(() =>
+      Object.keys(monsterGroups).map(level => {
+        const shortList = monsterGroups[Number(level)].filter(monster => activePacks.includes(monster.pack.toString()))
+
+        const pickedMonsterGroup = shortList[Math.floor(Math.random() * shortList.length)]
+
+        return pickedMonsterGroup
+      })
+    )
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div>
+      {Object.keys(packs).map(pack => (
+        <button
+          style={activePacks.includes(pack) ? {backgroundColor: '#baebba'} : undefined}
+          onClick={packHandler}
+          value={pack.toString()}
+          key={pack}
+        >
+          Pack {pack}
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      ))}
+      <button disabled={!activePacks.length} onClick={generate}>
+        Generate Scenario
+      </button>
+    </div>
   )
 }
 
