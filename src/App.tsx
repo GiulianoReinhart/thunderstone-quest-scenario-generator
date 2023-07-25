@@ -72,7 +72,9 @@ const App = () => {
         let pickedRooms = rooms[Number(level)].filter(room => room.pack === pickedMonsterGroup.pack)
 
         if (pickedRooms.length < 2) {
-          const remainingRooms = rooms[Number(level)].filter(room => room.name !== pickedRooms[0].name)
+          const remainingRooms = rooms[Number(level)].filter(
+            room => room.name !== pickedRooms[0].name && activePacks.includes(room.pack.toString())
+          )
 
           pickedRooms = [...pickedRooms, remainingRooms[Math.floor(Math.random() * remainingRooms.length)]]
         }
@@ -87,15 +89,11 @@ const App = () => {
         const filteredHeroes = heroes.filter(hero => hero.attack === pickedMonsterGroup.heroes)
 
         fittingHeroes?.push(...filteredHeroes)
-
-        // setFittingHeroes(prevState => (prevState ? [...prevState, ...filteredHeroes] : filteredHeroes))
       } else {
         pickedMonsterGroup.heroes.forEach(hero => {
           const foundHero = heroes.find(heroObject => heroObject.name === hero)
 
           foundHero && fittingHeroes?.push(foundHero)
-
-          // foundHero && setFittingHeroes(prevState => (prevState ? [...prevState, foundHero] : [foundHero]))
         })
       }
 
@@ -119,7 +117,7 @@ const App = () => {
 
       let allHeroes = heroes.filter(hero => activePacks.includes(hero.pack.toString()))
 
-      let tempFittingHeroes = fittingHeroes
+      let tempFittingHeroes = fittingHeroes.filter(hero => activePacks.includes(hero.pack.toString()))
 
       heroClasses
         .sort(() => 0.5 - Math.random())
@@ -211,8 +209,6 @@ const App = () => {
       heroClass => !heroPack.includes(pickedHeroes[heroClass].pack) && heroPack.push(pickedHeroes[heroClass].pack)
     )
 
-    console.log(heroPack)
-
     fittingGuardians = guardians.filter(guardian => heroPack.includes(guardian.pack))
 
     setGeneratedGuardian(fittingGuardians[Math.floor(Math.random() * fittingGuardians.length)])
@@ -230,18 +226,26 @@ const App = () => {
           Pack {pack}
         </button>
       ))}
-      <button disabled={!activePacks.length} onClick={generate}>
+      <button
+        disabled={!activePacks.length || (activePacks.length === 1 && activePacks.includes('5'))}
+        onClick={generate}
+      >
         Generate Scenario
       </button>
+      {!activePacks.length && <p style={{color: 'red'}}>Choose at least one pack.</p>}
+      {activePacks.length === 1 && activePacks.includes('5') && (
+        <p style={{color: 'red'}}>Pack 5 can’t be picked on its own.</p>
+      )}
+
       <h2>Generated Rooms</h2>
       {generatedRooms &&
         Object.keys(generatedRooms).map(level => (
           <ul key={generatedRooms[Number(level)][0].name}>
             <li>
-              Level {level}: {generatedRooms[Number(level)][0].name}
+              Level {level}: {generatedRooms[Number(level)][0].name} ({generatedRooms[Number(level)][0].pack})
             </li>
             <li>
-              Level {level}: {generatedRooms[Number(level)][1].name}
+              Level {level}: {generatedRooms[Number(level)][1].name} ({generatedRooms[Number(level)][1].pack})
             </li>
           </ul>
         ))}
@@ -249,7 +253,7 @@ const App = () => {
       {generatedMonsterGroups?.map((monsterGroup, index) => (
         <ul key={monsterGroup.name}>
           <li>
-            Level {index + 1}: {monsterGroup.name}
+            Level {index + 1}: {monsterGroup.name} ({monsterGroup.pack})
           </li>
         </ul>
       ))}
@@ -258,31 +262,41 @@ const App = () => {
         Object.keys(generatedHeroes).map(heroClass => (
           <ul key={generatedHeroes[heroClass].name}>
             <li>
-              {heroClass}: {generatedHeroes[heroClass].name}
+              {heroClass}: {generatedHeroes[heroClass].name} ({generatedHeroes[heroClass].pack})
             </li>
           </ul>
         ))}
       <h2>Generated Weapons</h2>
       <ul>
         {generatedWeapons?.map(weapon => (
-          <li key={weapon.name}>{weapon.name}</li>
+          <li key={weapon.name}>
+            {weapon.name} ({weapon.pack})
+          </li>
         ))}
       </ul>
       <h2>Generated Items</h2>
       <ul>
         {generatedItems?.map(item => (
-          <li key={item.name}>{item.name}</li>
+          <li key={item.name}>
+            {item.name} ({item.pack})
+          </li>
         ))}
       </ul>
       <h2>Generated Spells</h2>
       <ul>
         {generatedSpells?.map(spell => (
-          <li key={spell.name}>{spell.name}</li>
+          <li key={spell.name}>
+            {spell.name} ({spell.pack})
+          </li>
         ))}
       </ul>
       <h2>Generated Guardian</h2>
       <ul>
-        <li>{generatedGuardian?.name}</li>
+        {generatedGuardian && (
+          <li>
+            {generatedGuardian.name} ({generatedGuardian.pack})
+          </li>
+        )}
       </ul>
     </div>
   )

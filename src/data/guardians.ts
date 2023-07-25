@@ -1,4 +1,4 @@
-type Guardian = {
+export type Guardian = {
   name: string
   pack: number
 }
