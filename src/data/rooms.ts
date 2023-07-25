@@ -3,7 +3,7 @@ export type Room = {
   pack: number
 }
 
-type Rooms = {
+export type Rooms = {
   [key: number]: Room[]
 }
 
