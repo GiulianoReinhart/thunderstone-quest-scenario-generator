@@ -1,4 +1,4 @@
-type Spell = {
+export type Spell = {
   name: string
   pack: number
 }

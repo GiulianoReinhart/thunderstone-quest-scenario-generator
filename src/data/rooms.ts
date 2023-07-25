@@ -1,4 +1,4 @@
-type Room = {
+export type Room = {
   name: string
   pack: number
 }

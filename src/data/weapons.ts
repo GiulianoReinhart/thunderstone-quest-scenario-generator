@@ -1,4 +1,4 @@
-type Weapon = {
+export type Weapon = {
   name: string
   pack: number
 }
