@@ -1,38 +1,23 @@
-import {MouseEvent, useState} from 'react'
+import {motion} from 'framer-motion'
+import {Dispatch} from 'react'
+import {useNavigate} from 'react-router-dom'
+import {GeneratedData} from '../App'
 import {Guardian, guardians} from '../data/guardians'
-import {Hero, heroes} from '../data/heroes'
+import {GeneratedHeroes, Hero, PickedHeroes, heroes} from '../data/heroes'
 import {Item, items} from '../data/items'
 import {Monster, monsterGroups} from '../data/monsterGroups'
-import {packs} from '../data/packs'
-import {Rooms, rooms} from '../data/rooms'
+import {rooms} from '../data/rooms'
 import {Spell, spells} from '../data/spells'
 import {Weapon, weapons} from '../data/weapons'
+import {StyledGenerator} from './Generator.styled'
 
-type GeneratedHeroes = {
-  [key: string]: Hero
+type Props = {
+  activePacks: string[]
+  setGeneratedData: Dispatch<React.SetStateAction<GeneratedData | null>>
 }
 
-const Generator = () => {
-  const [activePacks, setActivePacks] = useState(Object.keys(packs))
-  const [generatedMonsterGroups, setGeneratedMonsterGroups] = useState<Monster[] | null>(null)
-  const [generatedRooms, setGeneratedRooms] = useState<Rooms | null>(null)
-  const [generatedHeroes, setGeneratedHeroes] = useState<GeneratedHeroes | null>(null)
-  const [generatedWeapons, setGeneratedWeapons] = useState<Weapon[] | null>(null)
-  const [generatedItems, setGeneratedItems] = useState<Item[] | null>(null)
-  const [generatedSpells, setGeneratedSpells] = useState<Spell[] | null>(null)
-  const [generatedGuardian, setGeneratedGuardian] = useState<Guardian | null>(null)
-
-  const packHandler = (e: MouseEvent<HTMLButtonElement>) => {
-    const targetPack: string = (e.target as HTMLButtonElement).value
-
-    setActivePacks(prevState => {
-      if (prevState.includes(targetPack)) {
-        return prevState.filter(pack => pack !== targetPack)
-      } else {
-        return [...prevState, targetPack].sort()
-      }
-    })
-  }
+const Generator = ({activePacks, setGeneratedData}: Props) => {
+  const navigate = useNavigate()
 
   const pickMarketCards = (
     referenceType: Monster | Hero,
@@ -48,18 +33,21 @@ const Generator = () => {
   }
 
   const generate = () => {
+    setGeneratedData({
+      monsterGroups: null,
+      rooms: null,
+      heroes: null,
+      weapons: null,
+      items: null,
+      spells: null,
+      guardian: null
+    })
+
     const fittingHeroes: Hero[] = []
     const fittingWeapons: Weapon[] = []
     const fittingItems: Item[] = []
     const fittingSpells: Spell[] = []
     let fittingGuardians: Guardian[] = []
-
-    setGeneratedMonsterGroups(null)
-    setGeneratedRooms(null)
-    setGeneratedHeroes(null)
-    setGeneratedWeapons(null)
-    setGeneratedItems(null)
-    setGeneratedSpells(null)
 
     // Generate Monster Groups and add fitting Heroes, Weapons, Items and Spells to their respective arrays
     const pickedMonsterGroups = Object.keys(monsterGroups).map(level => {
@@ -68,7 +56,7 @@ const Generator = () => {
       const pickedMonsterGroup = shortList[Math.floor(Math.random() * shortList.length)]
 
       // Add Rooms that fit to Monster Group to fittingRooms array
-      setGeneratedRooms(prevState => {
+      setGeneratedData(prevState => {
         let pickedRooms = rooms[Number(level)].filter(room => room.pack === pickedMonsterGroup.pack)
 
         if (pickedRooms.length < 2) {
@@ -81,7 +69,9 @@ const Generator = () => {
 
         pickedRooms.sort(() => 0.5 - Math.random())
 
-        return prevState ? {...prevState, [Number(level)]: pickedRooms} : {[Number(level)]: pickedRooms}
+        return (
+          prevState && {...prevState, rooms: {...prevState.rooms, [Number(level)]: pickedRooms.map(room => room.name)}}
+        )
       })
 
       // Add Heroes who fit to Monster Group to fittingHeroes array
@@ -102,15 +92,15 @@ const Generator = () => {
       pickMarketCards(pickedMonsterGroup, 'items', items, fittingItems)
       pickMarketCards(pickedMonsterGroup, 'spells', spells, fittingSpells)
 
-      return pickedMonsterGroup
+      return pickedMonsterGroup.name
     })
 
-    setGeneratedMonsterGroups(pickedMonsterGroups)
+    setGeneratedData(prevState => prevState && {...prevState, monsterGroups: [...pickedMonsterGroups]})
 
     // Generate Heroes and add fitting Weapons, Items and Spells to their respective arrays
     const heroClasses = ['Cleric', 'Rogue', 'Wizard', 'Fighter']
 
-    let pickedHeroes: GeneratedHeroes = {}
+    let pickedHeroes: PickedHeroes = {}
 
     do {
       pickedHeroes = {}
@@ -154,7 +144,13 @@ const Generator = () => {
         })
     } while (Object.keys(pickedHeroes).length < 4)
 
-    setGeneratedHeroes(pickedHeroes)
+    let generatedHeroNames: GeneratedHeroes = {}
+
+    Object.keys(pickedHeroes).forEach(
+      heroClass => (generatedHeroNames = {...generatedHeroNames, [heroClass]: pickedHeroes[heroClass].name})
+    )
+
+    setGeneratedData(prevState => prevState && {...prevState, heroes: generatedHeroNames})
 
     // Generate Weapons
     const generateMarketCards = (
@@ -164,7 +160,7 @@ const Generator = () => {
     ) => {
       fittingCards = fittingCards.filter(card => activePacks.includes(card.pack.toString()))
 
-      let pickedCards: (Weapon | Item | Spell)[]
+      let pickedCards: string[]
 
       do {
         pickedCards = []
@@ -191,16 +187,22 @@ const Generator = () => {
           tempFittingCards = tempFittingCards.filter(weapon => weapon.name !== pickedCard.name)
           allCards = allCards.filter(card => card.name !== pickedCard.name)
 
-          pickedCards = [...pickedCards, pickedCard]
+          pickedCards = [...pickedCards, pickedCard.name]
         }
       } while (pickedCards.length < (cardType === 'item' ? 2 : 3))
 
       return pickedCards
     }
 
-    setGeneratedWeapons(generateMarketCards(weapons, 'weapon', fittingWeapons))
-    setGeneratedItems(generateMarketCards(items, 'item', fittingItems))
-    setGeneratedSpells(generateMarketCards(spells, 'spell', fittingSpells))
+    setGeneratedData(
+      prevState =>
+        prevState && {
+          ...prevState,
+          weapons: generateMarketCards(weapons, 'weapon', fittingWeapons),
+          items: generateMarketCards(items, 'item', fittingItems),
+          spells: generateMarketCards(spells, 'spell', fittingSpells)
+        }
+    )
 
     // Generate Guardian
     const heroPack: number[] = []
@@ -211,94 +213,43 @@ const Generator = () => {
 
     fittingGuardians = guardians.filter(guardian => heroPack.includes(guardian.pack))
 
-    setGeneratedGuardian(fittingGuardians[Math.floor(Math.random() * fittingGuardians.length)])
+    setGeneratedData(
+      prevState =>
+        prevState && {
+          ...prevState,
+          guardian: {
+            name: fittingGuardians[Math.floor(Math.random() * fittingGuardians.length)].name,
+            level: Math.floor(Math.random() * (6 - 4 + 1)) + 4
+          }
+        }
+    )
+
+    navigate('/result')
   }
 
   return (
-    <div>
-      {Object.keys(packs).map(pack => (
+    <motion.main
+      id="generator-main"
+      transition={{duration: 0.4}}
+      initial={{opacity: 0}}
+      animate={{opacity: 1}}
+      exit={{opacity: 0}}
+    >
+      <StyledGenerator>
+        <p>Pick your expansion packs and click on the button below to generate a scenario.</p>
         <button
-          style={activePacks.includes(pack) ? {backgroundColor: '#baebba'} : undefined}
-          onClick={packHandler}
-          value={pack.toString()}
-          key={pack}
+          id="generate"
+          disabled={!activePacks.length || (activePacks.length === 1 && activePacks.includes('5'))}
+          onClick={generate}
         >
-          Pack {pack}
+          Generate Scenario
         </button>
-      ))}
-      <button
-        disabled={!activePacks.length || (activePacks.length === 1 && activePacks.includes('5'))}
-        onClick={generate}
-      >
-        Generate Scenario
-      </button>
-      {!activePacks.length && <p style={{color: 'red'}}>Choose at least one pack.</p>}
-      {activePacks.length === 1 && activePacks.includes('5') && (
-        <p style={{color: 'red'}}>Pack 5 can’t be picked on its own.</p>
-      )}
-
-      <h2>Generated Rooms</h2>
-      {generatedRooms &&
-        Object.keys(generatedRooms).map(level => (
-          <ul key={generatedRooms[Number(level)][0].name}>
-            <li>
-              Level {level}: {generatedRooms[Number(level)][0].name} ({generatedRooms[Number(level)][0].pack})
-            </li>
-            <li>
-              Level {level}: {generatedRooms[Number(level)][1].name} ({generatedRooms[Number(level)][1].pack})
-            </li>
-          </ul>
-        ))}
-      <h2>Generated Monsters</h2>
-      {generatedMonsterGroups?.map((monsterGroup, index) => (
-        <ul key={monsterGroup.name}>
-          <li>
-            Level {index + 1}: {monsterGroup.name} ({monsterGroup.pack})
-          </li>
-        </ul>
-      ))}
-      <h2>Generated Heroes</h2>
-      {generatedHeroes &&
-        Object.keys(generatedHeroes).map(heroClass => (
-          <ul key={generatedHeroes[heroClass].name}>
-            <li>
-              {heroClass}: {generatedHeroes[heroClass].name} ({generatedHeroes[heroClass].pack})
-            </li>
-          </ul>
-        ))}
-      <h2>Generated Weapons</h2>
-      <ul>
-        {generatedWeapons?.map(weapon => (
-          <li key={weapon.name}>
-            {weapon.name} ({weapon.pack})
-          </li>
-        ))}
-      </ul>
-      <h2>Generated Items</h2>
-      <ul>
-        {generatedItems?.map(item => (
-          <li key={item.name}>
-            {item.name} ({item.pack})
-          </li>
-        ))}
-      </ul>
-      <h2>Generated Spells</h2>
-      <ul>
-        {generatedSpells?.map(spell => (
-          <li key={spell.name}>
-            {spell.name} ({spell.pack})
-          </li>
-        ))}
-      </ul>
-      <h2>Generated Guardian</h2>
-      <ul>
-        {generatedGuardian && (
-          <li>
-            {generatedGuardian.name} ({generatedGuardian.pack})
-          </li>
+        {!activePacks.length && <p style={{color: 'red'}}>Choose at least one pack.</p>}
+        {activePacks.length === 1 && activePacks.includes('5') && (
+          <p style={{color: 'red'}}>Pack 5 can’t be picked on its own.</p>
         )}
-      </ul>
-    </div>
+      </StyledGenerator>
+    </motion.main>
   )
 }
 

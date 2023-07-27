@@ -8,6 +8,14 @@ export type Hero = {
   pack: number
 }
 
+export type PickedHeroes = {
+  [key: string]: Hero
+}
+
+export type GeneratedHeroes = {
+  [key: string]: string
+}
+
 export const heroes: Hero[] = [
   {
     name: 'Stormhand',
