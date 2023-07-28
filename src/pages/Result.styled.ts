@@ -6,7 +6,7 @@ export const StyledResult = styled.main`
   justify-content: center;
 
   h2 {
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
     text-align: center;
   }
 
@@ -24,10 +24,11 @@ export const StyledResult = styled.main`
       justify-content: center;
       width: 20rem;
       max-width: 100%;
-      min-height: 10rem;
-      height: 10rem;
+      min-height: 9rem;
       background-color: rgba(255, 255, 255, 0.1);
       border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
 
       &:after {
         content: '';
@@ -59,7 +60,7 @@ export const StyledResult = styled.main`
 
   #market {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: auto auto;
     grid-template-areas:
       'weapons spells'
       'items items';

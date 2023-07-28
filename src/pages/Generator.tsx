@@ -237,17 +237,19 @@ const Generator = ({activePacks, setGeneratedData}: Props) => {
     >
       <StyledGenerator>
         <p>Pick your expansion packs and click on the button below to generate a scenario.</p>
-        <button
-          id="generate"
-          disabled={!activePacks.length || (activePacks.length === 1 && activePacks.includes('5'))}
-          onClick={generate}
-        >
-          Generate Scenario
-        </button>
-        {!activePacks.length && <p style={{color: 'red'}}>Choose at least one pack.</p>}
-        {activePacks.length === 1 && activePacks.includes('5') && (
-          <p style={{color: 'red'}}>Pack 5 can’t be picked on its own.</p>
-        )}
+        <div id="button-container">
+          <button
+            id="generate"
+            disabled={!activePacks.length || (activePacks.length === 1 && activePacks.includes('5'))}
+            onClick={generate}
+          >
+            Generate Scenario
+          </button>
+          {!activePacks.length && <p className="warning">Choose at least one pack.</p>}
+          {activePacks.length === 1 && activePacks.includes('5') && (
+            <p className="warning">“Ripples in Time” can’t be picked on its own.</p>
+          )}
+        </div>
       </StyledGenerator>
     </motion.main>
   )

@@ -14,8 +14,12 @@ export default createGlobalStyle`${css`
   }
 
   html {
-    font-size: 10px;
     font-family: 'Pirata One';
+    font-size: 10px;
+
+    @media (max-width: 490px) {
+      font-size: 9px;
+    }
   }
 
   body {
@@ -23,7 +27,6 @@ export default createGlobalStyle`${css`
     overflow-x: hidden;
     background: radial-gradient(circle, rgba(90, 77, 63, 1) 0%, rgba(74, 61, 46, 1) 100%);
     width: 100dvw;
-
     font-size: 1.8rem;
   }
 
