@@ -32,7 +32,8 @@ const Generator = ({activePacks, setGeneratedData}: Props) => {
     })
   }
 
-  const getAmounts = (array: string[]) => {
+  // TESTING
+  /* const getAmounts = (array: string[]) => {
     let firstElement = array[0]
 
     let filterArray = array.filter(e => e === firstElement)
@@ -300,7 +301,7 @@ const Generator = ({activePacks, setGeneratedData}: Props) => {
     // 3: Save that somewhere
     // 4: Delete all of those entries from that array
     // 5: Repeat 1–4 until no element left inside of array
-  }
+  } */
 
   const generate = () => {
     setGeneratedData({
@@ -532,13 +533,13 @@ const Generator = ({activePacks, setGeneratedData}: Props) => {
           >
             Generate Scenario
           </button>
-          <button
+          {/* <button
             id="generate"
             disabled={!activePacks.length || (activePacks.length === 1 && activePacks.includes('5'))}
             onClick={generateTenThousandTimes}
           >
             Generate 10.000 Times
-          </button>
+          </button> */}
           {!activePacks.length && <p className="warning">Choose at least one pack.</p>}
           {activePacks.length === 1 && activePacks.includes('5') && (
             <p className="warning">“Ripples in Time” can’t be picked on its own.</p>
