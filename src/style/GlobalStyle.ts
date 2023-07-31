@@ -87,6 +87,7 @@ export default createGlobalStyle`${css`
 
   a {
     text-decoration: none;
+    color: #e1a15c;
   }
 
   button,

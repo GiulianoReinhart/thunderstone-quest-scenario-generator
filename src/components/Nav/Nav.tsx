@@ -1,10 +1,10 @@
 import {AnimatePresence, motion} from 'framer-motion'
 import {Dispatch, MouseEvent} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
-import {GeneratedData} from '../App'
-import {packs} from '../data/packs'
-import {ReactComponent as Logo} from '../img/logo.svg'
-import packIcons from '../img/packs/packIcons'
+import {GeneratedData} from '../../App'
+import {packs} from '../../data/packs'
+import {ReactComponent as Logo} from '../../img/logo.svg'
+import packIcons from '../../img/packs/packIcons'
 import {StyledNav} from './Nav.styled'
 
 type Props = {

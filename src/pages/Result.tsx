@@ -25,7 +25,7 @@ export const Result = ({generatedData}: Props) => {
           <h2>Weapons</h2>
           <div className="card-container">
             {generatedData.weapons?.map(weapon => (
-              <div className="card-box">
+              <div key={weapon} className="card-box">
                 <span>{weapon}</span>
               </div>
             ))}
@@ -35,7 +35,7 @@ export const Result = ({generatedData}: Props) => {
           <h2>Spells</h2>
           <div className="card-container">
             {generatedData.spells?.map(spell => (
-              <div className="card-box">
+              <div key={spell} className="card-box">
                 <span>{spell}</span>
               </div>
             ))}
@@ -45,7 +45,7 @@ export const Result = ({generatedData}: Props) => {
           <h2>Items</h2>
           <div className="card-container">
             {generatedData.items?.map(item => (
-              <div className="card-box">
+              <div key={item} className="card-box">
                 <span>{item}</span>
               </div>
             ))}
@@ -57,7 +57,7 @@ export const Result = ({generatedData}: Props) => {
         <div className="card-container">
           {generatedData.heroes &&
             Object.keys(generatedData.heroes).map(heroClass => (
-              <div className="card-box">
+              <div key={heroClass} className="card-box">
                 <span>{generatedData.heroes && generatedData.heroes[heroClass]}</span>
                 <small>{heroClass}</small>
               </div>
@@ -68,16 +68,14 @@ export const Result = ({generatedData}: Props) => {
         <div id="monster-groups">
           <h2>Monster Groups</h2>
           <div className="card-container">
-            {generatedData.monsterGroups?.map((monsterGroup, index) => {
-              return (
-                <div className="card-box">
-                  {index === 0 && <LevelOneIcon />}
-                  {index === 1 && <LevelTwoIcon />}
-                  {index === 2 && <LevelThreeIcon />}
-                  <span>{monsterGroup}</span>
-                </div>
-              )
-            })}
+            {generatedData.monsterGroups?.map((monsterGroup, index) => (
+              <div key={monsterGroup} className="card-box">
+                {index === 0 && <LevelOneIcon />}
+                {index === 1 && <LevelTwoIcon />}
+                {index === 2 && <LevelThreeIcon />}
+                <span>{monsterGroup}</span>
+              </div>
+            ))}
           </div>
         </div>
         <div id="guardian">
@@ -100,7 +98,7 @@ export const Result = ({generatedData}: Props) => {
               level =>
                 generatedData.rooms &&
                 generatedData.rooms[Number(level)].map(room => (
-                  <div className="card-box">
+                  <div key={`${level}-${room}`} className="card-box">
                     {Number(level) === 1 && <LevelOneIcon />}
                     {Number(level) === 2 && <LevelTwoIcon />}
                     {Number(level) === 3 && <LevelThreeIcon />}

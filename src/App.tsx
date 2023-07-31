@@ -1,8 +1,8 @@
 import {AnimatePresence} from 'framer-motion'
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {Route, Routes, useLocation} from 'react-router-dom'
-import Footer from './components/Footer'
-import Nav from './components/Nav'
+import Footer from './components/Footer/Footer'
+import Nav from './components/Nav/Nav'
 import {GeneratedHeroes} from './data/heroes'
 import {packs} from './data/packs'
 import Generator from './pages/Generator'
@@ -25,7 +25,7 @@ const App = () => {
   const [generatedData, setGeneratedData] = useState<GeneratedData | null>(null)
   const location = useLocation()
 
-  useEffect(() => console.log(generatedData), [generatedData])
+  // useEffect(() => console.log(generatedData), [generatedData])
 
   return (
     <>
