@@ -7,7 +7,6 @@ import {StyledCookieBanner} from './CookieBanner.styled'
 const CookieBanner = () => {
   useEffect(() => {
     const isConsent = getCookieConsentValue()
-    console.log(isConsent)
 
     if (isConsent === 'true') {
       handleAcceptCookie()
