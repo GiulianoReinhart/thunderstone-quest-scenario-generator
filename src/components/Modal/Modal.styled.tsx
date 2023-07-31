@@ -11,7 +11,7 @@ export const StyledModal = styled.div`
   width: 100%;
   background-color: rgba(49, 41, 33, 0.8);
 
-  button {
+  .close {
     position: absolute;
     right: 3rem;
     top: 3rem;
@@ -68,9 +68,21 @@ export const StyledModal = styled.div`
       border-radius: 1rem;
     }
 
+    button {
+      border-color: #5a4d3f;
+      color: #5a4d3f;
+      font-size: 2.4rem;
+      margin-top: 1em;
+
+      &:hover {
+        background-color: #5a4d3f;
+        color: white;
+      }
+    }
+
     h2,
     p {
-      color: rgba(31, 24, 17, 0.8);
+      color: #5a4d3f;
 
       &:not(:last-child) {
         margin-bottom: 0.5em;
@@ -92,7 +104,7 @@ export const StyledModal = styled.div`
   @media (max-width: 750px) {
     align-items: flex-end;
 
-    button {
+    .close {
       position: absolute;
       right: 3rem;
       top: 1.5rem;
@@ -117,6 +129,7 @@ export const StyledModal = styled.div`
         transform: rotate(-45deg);
       }
     }
+
     #content-box {
       max-height: calc(100dvh - 8rem);
       max-width: calc(100% - 6rem);

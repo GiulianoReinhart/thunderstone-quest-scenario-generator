@@ -1,4 +1,6 @@
 import {useState} from 'react'
+import {Cookies} from 'react-cookie-consent'
+import {handleDeclineCookie} from '../../utils/handleDeclineCookie'
 import Modal from '../Modal/Modal'
 import {StyledFooter} from './Footer.styled'
 
@@ -9,10 +11,14 @@ const Footer = () => {
     setModalOpen(true)
   }
 
+  const stopTrackingHandler = () => {
+    Cookies.set('CookieConsent', false)
+    handleDeclineCookie()
+  }
+
   return (
     <StyledFooter>
       <i onClick={clickHandler}>i</i>
-
       <Modal modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <h2>Found a bug?</h2>
         <p>
@@ -49,6 +55,9 @@ const Footer = () => {
           I do not own the used expansion pack icons or any other used content of Thunderstone Quest. All credits go to
           its rightful owner (Alderac Entertainment Group).
         </p>
+        <h2>Cookies</h2>
+        <p>By clicking on the button below, you can stop the website from tracking you.</p>
+        <button onClick={stopTrackingHandler}>Stop Tracking</button>
       </Modal>
     </StyledFooter>
   )

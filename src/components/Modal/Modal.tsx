@@ -16,7 +16,7 @@ const Modal = ({children, modalOpen, setModalOpen}: Props) => {
     <AnimatePresence>
       {modalOpen && (
         <AnimatedStyledModal initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}}>
-          <button onClick={() => setModalOpen(false)} />
+          <button className="close" onClick={() => setModalOpen(false)} />
           <div id="content-box">{children}</div>
         </AnimatedStyledModal>
       )}

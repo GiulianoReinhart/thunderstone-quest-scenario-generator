@@ -1,6 +1,7 @@
 import {AnimatePresence} from 'framer-motion'
 import {useState} from 'react'
 import {Route, Routes, useLocation} from 'react-router-dom'
+import CookieBanner from './components/CookieBanner/CookieBanner'
 import Footer from './components/Footer/Footer'
 import Nav from './components/Nav/Nav'
 import {GeneratedHeroes} from './data/heroes'
@@ -25,8 +26,6 @@ const App = () => {
   const [generatedData, setGeneratedData] = useState<GeneratedData | null>(null)
   const location = useLocation()
 
-  // useEffect(() => console.log(generatedData), [generatedData])
-
   return (
     <>
       <Nav activePacks={activePacks} setActivePacks={setActivePacks} setGeneratedData={setGeneratedData} />
@@ -37,6 +36,7 @@ const App = () => {
         </Routes>
       </AnimatePresence>
       <Footer />
+      <CookieBanner />
     </>
   )
 }
