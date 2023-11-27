@@ -1,12 +1,12 @@
 import {motion} from 'framer-motion'
 import {Navigate} from 'react-router-dom'
 import {GeneratedData} from '../App'
-import {ReactComponent as LevelOneIcon} from '../img/levels/level_1.svg'
-import {ReactComponent as LevelTwoIcon} from '../img/levels/level_2.svg'
-import {ReactComponent as LevelThreeIcon} from '../img/levels/level_3.svg'
-import {ReactComponent as LevelFourIcon} from '../img/levels/level_4.svg'
-import {ReactComponent as LevelFiveIcon} from '../img/levels/level_5.svg'
-import {ReactComponent as LevelSixIcon} from '../img/levels/level_6.svg'
+import LevelOneIcon from '../img/levels/level_1.svg?react'
+import LevelTwoIcon from '../img/levels/level_2.svg?react'
+import LevelThreeIcon from '../img/levels/level_3.svg?react'
+import LevelFourIcon from '../img/levels/level_4.svg?react'
+import LevelFiveIcon from '../img/levels/level_5.svg?react'
+import LevelSixIcon from '../img/levels/level_6.svg?react'
 import {StyledResult} from './Result.styled'
 
 type Props = {

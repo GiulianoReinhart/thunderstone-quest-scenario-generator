@@ -3,7 +3,7 @@ import {Dispatch, MouseEvent} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import {GeneratedData} from '../../App'
 import {packs} from '../../data/packs'
-import {ReactComponent as Logo} from '../../img/logo.svg'
+import Logo from '../../img/logo.svg?react'
 import packIcons from '../../img/packs/packIcons'
 import {StyledNav} from './Nav.styled'
 
